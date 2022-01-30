@@ -1,0 +1,422 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+#include "mmsystem.h"
+
+#include "Unit1.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm1 *Form1; // 2. stworzenie zmiennych
+
+int liczby[1000];
+bool gra_rozpoczeta = false;
+int ile=0;
+int licznik=0;
+
+void sekwencja()     //4. sekwencja dzwiekow
+{
+        Application->ProcessMessages(); Sleep(1000);
+
+        Form1->z1->Picture->LoadFromFile("img/1.bmp");
+        Form1->z2->Picture->LoadFromFile("img/2.bmp");
+        Form1->z3->Picture->LoadFromFile("img/3.bmp");
+        Form1->z4->Picture->LoadFromFile("img/4.bmp");
+        Form1->z5->Picture->LoadFromFile("img/5.bmp");
+        Form1->z6->Picture->LoadFromFile("img/6.bmp");
+        Form1->z7->Picture->LoadFromFile("img/7.bmp");
+
+        Form1->z1->Enabled = false;  //zarowki nieaktywne podczas odgrywania
+        Form1->z2->Enabled = false;
+        Form1->z3->Enabled = false;
+        Form1->z4->Enabled = false;
+        Form1->z5->Enabled = false;
+        Form1->z6->Enabled = false;
+        Form1->z7->Enabled = false;
+
+        Form1->Label1->Caption = "Następna runda za 2";
+        Application->ProcessMessages(); Sleep(900);
+
+        Form1->Label1->Caption = "Następna runda za 1";
+        Application->ProcessMessages(); Sleep(900);
+
+        Form1->Label1->Caption = "Zapamiętaj kolejność!";
+        Application->ProcessMessages(); Sleep(900);
+
+        ile++;
+        for (int i=0; i<ile; i++)
+        {
+                switch(liczby[i])
+                {
+                        case 1:
+                        {
+                        sndPlaySound("snd/1.wav" ,SND_ASYNC);
+                        Form1->z1a->Visible = true;
+                        } break;
+
+                        case 2:
+                        {
+                        sndPlaySound("snd/2.wav" ,SND_ASYNC);
+                        Form1->z2a->Visible = true;
+                        } break;
+
+                        case 3:
+                        {
+                        sndPlaySound("snd/3.wav" ,SND_ASYNC);
+                        Form1->z3a->Visible = true;
+                        } break;
+
+                        case 4:
+                        {
+                        sndPlaySound("snd/4.wav" ,SND_ASYNC);
+                        Form1->z4a->Visible = true;
+                        } break;
+
+                        case 5:
+                        {
+                        sndPlaySound("snd/5.wav" ,SND_ASYNC);
+                        Form1->z5a->Visible = true;
+                        } break;
+
+                        case 6:
+                        {
+                        sndPlaySound("snd/6.wav" ,SND_ASYNC);
+                        Form1->z6a->Visible = true;
+                        } break;
+
+                        case 7:
+                        {
+                        sndPlaySound("snd/7.wav" ,SND_ASYNC);
+                        Form1->z7a->Visible = true;
+                        } break;
+                } //switch
+                Application->ProcessMessages(); Sleep(800);
+                Form1->z1a->Visible = false;
+                Form1->z2a->Visible = false;
+                Form1->z3a->Visible = false;
+                Form1->z4a->Visible = false;
+                Form1->z5a->Visible = false;
+                Form1->z6a->Visible = false;
+                Form1->z7a->Visible = false;
+                Application->ProcessMessages(); Sleep(100);
+        }//for
+        Form1->z1->Enabled = true;
+        Form1->z2->Enabled = true;
+        Form1->z3->Enabled = true;
+        Form1->z4->Enabled = true;
+        Form1->z5->Enabled = true;
+        Form1->z6->Enabled = true;
+        Form1->z7->Enabled = true;
+        Form1->Label1->Caption = "Powtórz sekwencję";
+        licznik=0;
+}
+
+
+//---------------------------------------------------------------------------
+__fastcall TForm1::TForm1(TComponent* Owner)
+        : TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::FormCreate(TObject *Sender)  //1. wypełnienie tablicy
+{
+        randomize();
+        for(int i=0; i<1000; i++)
+        {
+                liczby[i] = random(7)+1;
+        }
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Label1Click(TObject *Sender)     // 3. start gry
+{
+        if(gra_rozpoczeta == false)
+        {
+                gra_rozpoczeta = true;
+                sndPlaySound("snd/start.wav" ,SND_ASYNC);
+                sekwencja();
+        }
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::z1Click(TObject *Sender)
+{
+        if(gra_rozpoczeta == true)
+        {
+                licznik++;
+                if(liczby[licznik-1]!=1)
+                {
+                        ile--;
+                        Label1->Caption = "Źle! twój wynik to: "+IntToStr(ile);
+                        sndPlaySound("snd/end.wav" ,SND_ASYNC);
+                        gra_rozpoczeta = false;
+                }
+                if(licznik == ile)
+                {
+                        Label1->Caption = "Mega dobrze";
+                        sekwencja();
+                }
+        }
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::z2Click(TObject *Sender)
+{
+        if(gra_rozpoczeta == true)
+        {
+                licznik++;
+                if(liczby[licznik-1]!=2)
+                {
+                        ile--;
+                        Label1->Caption = "Źle! twój wynik to: "+IntToStr(ile);
+                        sndPlaySound("snd/end.wav" ,SND_ASYNC);
+                        gra_rozpoczeta = false;
+                }
+                if(licznik == ile)
+                {
+                        Label1->Caption = "Mega dobrze";
+                        sekwencja();
+                }
+        }
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::z3Click(TObject *Sender)
+{
+        if(gra_rozpoczeta == true)
+        {
+                licznik++;
+                if(liczby[licznik-1]!=3)
+                {
+                        ile--;
+                        Label1->Caption = "Źle! twój wynik to: "+IntToStr(ile);
+                        sndPlaySound("snd/end.wav" ,SND_ASYNC);
+                        gra_rozpoczeta = false;
+                }
+                if(licznik == ile)
+                {
+                        Label1->Caption = "Mega dobrze";
+                        sekwencja();
+                }
+        }
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::z4Click(TObject *Sender)
+{
+        if(gra_rozpoczeta == true)
+        {
+                licznik++;
+                if(liczby[licznik-1]!=4)
+                {
+                        ile--;
+                        Label1->Caption = "Źle! twój wynik to: "+IntToStr(ile);
+                        sndPlaySound("snd/end.wav" ,SND_ASYNC);
+                        gra_rozpoczeta = false;
+                }
+                if(licznik == ile)
+                {
+                        Label1->Caption = "Mega dobrze";
+                        sekwencja();
+                }
+        }
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::z5Click(TObject *Sender)
+{
+        if(gra_rozpoczeta == true)
+        {
+                licznik++;
+                if(liczby[licznik-1]!=5)
+                {
+                        ile--;
+                        Label1->Caption = "Źle! twój wynik to: "+IntToStr(ile);
+                        sndPlaySound("snd/end.wav" ,SND_ASYNC);
+                        gra_rozpoczeta = false;
+                }
+                if(licznik == ile)
+                {
+                        Label1->Caption = "Mega dobrze";
+                        sekwencja();
+                }
+        }
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::z6Click(TObject *Sender)
+{
+        if(gra_rozpoczeta == true)
+        {
+                licznik++;
+                if(liczby[licznik-1]!=6)
+                {
+                        ile--;
+                        Label1->Caption = "Źle! twój wynik to: "+IntToStr(ile);
+                        sndPlaySound("snd/end.wav" ,SND_ASYNC);
+                        gra_rozpoczeta = false;
+                }
+                if(licznik == ile)
+                {
+                        Label1->Caption = "Mega dobrze";
+                        sekwencja();
+                }
+        }
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::z7Click(TObject *Sender)
+{
+        if(gra_rozpoczeta == true)
+        {
+                licznik++;
+                if(liczby[licznik-1]!=7)
+                {
+                        ile--;
+                        Label1->Caption = "Źle! twój wynik to: "+IntToStr(ile);
+                        sndPlaySound("snd/end.wav" ,SND_ASYNC);
+                        gra_rozpoczeta = false;
+                }
+                if(licznik == ile)
+                {
+                        Label1->Caption = "Mega dobrze";
+                        sekwencja();
+                }
+        }
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::z1MouseDown(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z1->Picture->LoadFromFile("img/1l.bmp");
+        sndPlaySound("snd/1.wav" ,SND_ASYNC);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z1MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z1->Picture->LoadFromFile("img/1.bmp");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z2MouseDown(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z2->Picture->LoadFromFile("img/2l.bmp");
+        sndPlaySound("snd/2.wav" ,SND_ASYNC);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z2MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z2->Picture->LoadFromFile("img/2.bmp");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z3MouseDown(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z3->Picture->LoadFromFile("img/3l.bmp");
+        sndPlaySound("snd/3.wav" ,SND_ASYNC);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z3MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z3->Picture->LoadFromFile("img/3.bmp");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z4MouseDown(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z4->Picture->LoadFromFile("img/4l.bmp");
+        sndPlaySound("snd/4.wav" ,SND_ASYNC);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z4MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z4->Picture->LoadFromFile("img/4.bmp");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z5MouseDown(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z5->Picture->LoadFromFile("img/5l.bmp");
+        sndPlaySound("snd/5.wav" ,SND_ASYNC);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z5MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z5->Picture->LoadFromFile("img/5.bmp");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z6MouseDown(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z6->Picture->LoadFromFile("img/6l.bmp");
+        sndPlaySound("snd/6.wav" ,SND_ASYNC);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z6MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z6->Picture->LoadFromFile("img/6.bmp");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z7MouseDown(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z7->Picture->LoadFromFile("img/7l.bmp");
+        sndPlaySound("snd/7.wav" ,SND_ASYNC);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::z7MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z7->Picture->LoadFromFile("img/7.bmp");
+}
+//---------------------------------------------------------------------------
+
+
+
+void __fastcall TForm1::kolorta1Click(TObject *Sender)
+{
+        if (ColorDialog1->Execute())
+        {
+                Form1->Color = ColorDialog1->Color;
+        }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::czcionka1Click(TObject *Sender)
+{
+        if (FontDialog1->Execute())
+        {
+              Label1->Font->Name = FontDialog1->Font->Name;
+              Label1->Font->Color = FontDialog1->Font->Color;
+              Label1->Font->Style = FontDialog1->Font->Style;
+        }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Label2Click(TObject *Sender)
+{
+        Form1->Label1->Caption = "START";
+        gra_rozpoczeta = false;
+        ile=0;
+        licznik=0;
+        randomize();
+        for(int i=0; i<1000; i++)
+        {
+                liczby[i] = random(7)+1;
+        }
+
+}
+//---------------------------------------------------------------------------
